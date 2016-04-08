@@ -10,7 +10,6 @@
 namespace Tests\Unit;
 
 use \Longman\TelegramBot\Entities\Update;
-use \Longman\TelegramBot\Entities\ReplyToMessage;
 
 /**
  * @package 		TelegramTest
