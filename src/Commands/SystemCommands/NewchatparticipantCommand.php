@@ -42,10 +42,10 @@ class NewchatparticipantCommand extends SystemCommand
             $text = 'Hi ' . $participant->tryMention() . '!';
         }
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

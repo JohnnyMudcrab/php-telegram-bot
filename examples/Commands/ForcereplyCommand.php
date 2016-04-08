@@ -36,10 +36,10 @@ class ForceReplyCommand extends UserCommand
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
 
-        $data = [];
+        $data = array();
         $data['chat_id'] = $chat_id;
         $data['text'] = 'Write something:';
-        $data['reply_markup'] = new ForceReply(['selective' => false]);
+        $data['reply_markup'] = new ForceReply(array('selective' => false));
 
         return Request::sendMessage($data);
     }

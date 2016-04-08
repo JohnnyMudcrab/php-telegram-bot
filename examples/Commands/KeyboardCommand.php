@@ -37,54 +37,54 @@ class KeyboardCommand extends UserCommand
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 
-        $data = [];
+        $data = array();
         $data['chat_id'] = $chat_id;
         $data['text'] = 'Press a Button:';
 
         //Keyboard examples
-        $keyboards = [];
+        $keyboards = array();
 
         //0
-        $keyboard[] = ['7','8','9'];
-        $keyboard[] = ['4','5','6'];
-        $keyboard[] = ['1','2','3'];
-        $keyboard[] = [' ','0',' '];
+        $keyboard[] = array('7','8','9');
+        $keyboard[] = array('4','5','6');
+        $keyboard[] = array('1','2','3');
+        $keyboard[] = array(' ','0',' ');
        
         $keyboards[] = $keyboard;
         unset($keyboard);
 
         //1
-        $keyboard[] = ['7','8','9','+'];
-        $keyboard[] = ['4','5','6','-'];
-        $keyboard[] = ['1','2','3','*'];
-        $keyboard[] = [' ','0',' ','/'];
+        $keyboard[] = array('7','8','9','+');
+        $keyboard[] = array('4','5','6','-');
+        $keyboard[] = array('1','2','3','*');
+        $keyboard[] = array(' ','0',' ','/');
 
         $keyboards[] = $keyboard;
         unset($keyboard);
 
         //2
-        $keyboard[] = ['A'];
-        $keyboard[] = ['B'];
-        $keyboard[] = ['C'];
+        $keyboard[] = array('A');
+        $keyboard[] = array('B');
+        $keyboard[] = array('C');
 
         $keyboards[] = $keyboard;
         unset($keyboard);
 
         //3
-        $keyboard[] = ['A'];
-        $keyboard[] = ['B'];
-        $keyboard[] = ['C','D'];
+        $keyboard[] = array('A');
+        $keyboard[] = array('B');
+        $keyboard[] = array('C','D');
 
         $keyboards[] = $keyboard;
         unset($keyboard);
 
         $data['reply_markup'] = new ReplyKeyboardMarkup(
-            [
-                'keyboard' => $keyboards[1] ,
+            array(
+                'keyboard' => $keyboards[1],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => false,
                 'selective' => false
-            ]
+            )
         );
 
         return Request::sendMessage($data);

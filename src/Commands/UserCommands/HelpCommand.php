@@ -64,11 +64,11 @@ class HelpCommand extends UserCommand
             }
         }
 
-        $data = [
+        $data = array(
             'chat_id'             => $chat_id,
             'reply_to_message_id' => $message_id,
             'text'                => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

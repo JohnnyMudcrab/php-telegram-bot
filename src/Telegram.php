@@ -58,7 +58,7 @@ class Telegram
      *
      * @var array
      */
-    protected $commands_paths = [];
+    protected $commands_paths = array();
 
     /**
      * Current Update object
@@ -121,14 +121,14 @@ class Telegram
      *
      * @var array
      */
-    protected $commands_config = [];
+    protected $commands_config = array();
 
     /**
      * Admins list
      *
      * @var array
      */
-    protected $admins_list = [];
+    protected $admins_list = array();
 
     /**
      * ServerResponse of the last Command execution
@@ -189,7 +189,7 @@ class Telegram
      */
     public function getCommandsList()
     {
-        $commands = [];
+        $commands = array();
 
         foreach ($this->commands_paths as $path) {
             try {
@@ -234,7 +234,7 @@ class Telegram
      */
     public function getCommandObject($command)
     {
-        $which = ['System'];
+        $which = array('System');
         ($this->isAdmin()) && $which[] = 'Admin';
         $which[] = 'User';
 
@@ -372,11 +372,11 @@ class Telegram
         //As explained in the telegram bot api documentation
         $offset = (isset($last_update[0]['id'])) ? $last_update[0]['id'] + 1 : null;
 
-        $response = Request::getUpdates([
+        $response = Request::getUpdates(array(
             'offset'  => $offset,
             'limit'   => $limit,
             'timeout' => $timeout,
-        ]);
+        ));
 
         if ($response->isOk()) {
             //Process all updates
@@ -435,7 +435,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, ['inline_query', 'chosen_inline_result'])) {
+        if (in_array($update_type, array('inline_query', 'chosen_inline_result'))) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
@@ -450,7 +450,7 @@ class Telegram
             $type = $message->getType();
             if ($type === 'command') {
                 $command = $message->getCommand();
-            } elseif (in_array($type, [
+            } elseif (in_array($type, array(
                 'channel_chat_created',
                 'delete_chat_photo',
                 'group_chat_created',
@@ -458,7 +458,7 @@ class Telegram
                 'new_chat_participant',
                 'new_chat_title',
                 'supergroup_chat_created',
-            ])) {
+            ))) {
                 $command = $this->getCommandFromType($type);
             }
         }
@@ -668,7 +668,7 @@ class Telegram
      */
     public function getCommandConfig($command)
     {
-        return isset($this->commands_config[$command]) ? $this->commands_config[$command] : [];
+        return isset($this->commands_config[$command]) ? $this->commands_config[$command] : array();
     }
 
     /**

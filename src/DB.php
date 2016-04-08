@@ -36,7 +36,7 @@ class DB
      *
      * @var array
      */
-    static protected $mysql_credentials = [];
+    static protected $mysql_credentials = array();
 
     /**
      * PDO object
@@ -78,7 +78,7 @@ class DB
         self::$mysql_credentials = $credentials;
         self::$table_prefix = $table_prefix;
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
@@ -581,7 +581,7 @@ class DB
             $sth->bindParam(':audio', $audio, \PDO::PARAM_STR);
             $sth->bindParam(':document', $document, \PDO::PARAM_STR);
 
-            $var = [];
+            $var = array();
             if (is_array($photo)) {
                 foreach ($photo as $elm) {
                     $var[] = json_decode($elm, true);
@@ -604,7 +604,7 @@ class DB
             $sth->bindParam(':new_chat_title', $new_chat_title, \PDO::PARAM_STR);
 
             //Array of Photosize
-            $var = [];
+            $var = array();
             if (is_array($new_chat_photo)) {
                 foreach ($new_chat_photo as $elm) {
                     $var[] = json_decode($elm, true);
@@ -667,8 +667,8 @@ class DB
 
             //Building parts of query
             $chat_or_user = '';
-            $where = [];
-            $tokens = [];
+            $where = array();
+            $tokens = array();
 
             if (!$select_groups || !$select_users || !$select_super_groups) {
                 if ($select_groups) {

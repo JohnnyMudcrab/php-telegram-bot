@@ -186,13 +186,13 @@ class Conversation
     protected function updateStatus($status)
     {
         if ($this->exists()) {
-            $fields = ['status' => $status];
-            $where  = [
+            $fields = array('status' => $status);
+            $where  = array(
                 'id'  => $this->conversation['id'],
                 'status'  => 'active',
                 'user_id' => $this->user_id,
                 'chat_id' => $this->chat_id,
-            ];
+            );
             if (ConversationDB::updateConversation($fields, $where)) {
                 return true;
             }
@@ -209,9 +209,9 @@ class Conversation
     public function update()
     {
         if ($this->exists()) {
-            $fields = ['notes' => json_encode($this->notes)];
+            $fields = array('notes' => json_encode($this->notes));
             //I can update a conversation whatever the state is
-            $where = ['id'  => $this->conversation['id']];
+            $where = array('id' => $this->conversation['id']);
             if (ConversationDB::updateConversation($fields, $where)) {
                 return true;
             }

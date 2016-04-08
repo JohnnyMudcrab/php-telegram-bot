@@ -37,7 +37,7 @@ class Request
      *
      * @var array
      */
-    private static $methods = [
+    private static $methods = array(
         'getMe',
         'sendMessage',
         'forwardMessage',
@@ -54,7 +54,7 @@ class Request
         'setWebhook',
         'getFile',
         'answerInlineQuery',
-    ];
+    );
 
     /**
      * Initialize
@@ -141,7 +141,7 @@ class Request
         //No value set in $data ie testing setWebhook
         //Provided $data['chat_id'] ie testing sendMessage
 
-        $fake_response = ['ok' => true]; // :)
+        $fake_response = array('ok' => true); // :)
 
         if (!isset($data)) {
             $fake_response['result'] = true;
@@ -151,12 +151,12 @@ class Request
         if (isset($data['chat_id'])) {
             $data['message_id'] = '1234';
             $data['date'] = '1441378360';
-            $data['from'] = [
+            $data['from'] = array(
                 'id'         => 123456789,
                 'first_name' => 'botname',
                 'username'   => 'namebot',
-            ];
-            $data['chat'] = ['id' => $data['chat_id']];
+            );
+            $data['chat'] = array('id' => $data['chat_id']);
 
             $fake_response['result'] = $data;
         }
@@ -179,12 +179,12 @@ class Request
             throw new TelegramException('Curl failed to initialize');
         }
 
-        $curlConfig = [
+        $curlConfig = array(
             CURLOPT_URL            => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SAFE_UPLOAD    => true,
-        ];
+        );
 
         if (!empty($data)) {
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
@@ -257,14 +257,14 @@ class Request
             throw new TelegramException('Curl failed to initialize');
         }
 
-        $curlConfig = [
+        $curlConfig = array(
             CURLOPT_URL            => 'https://api.telegram.org/file/bot' . self::$telegram->getApiKey() . '/' . $path,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => 0,
             CURLOPT_BINARYTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_FILE           => $fp,
-        ];
+        );
 
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
@@ -571,7 +571,7 @@ class Request
      */
     public static function setWebhook($url = '', $file = null)
     {
-        $data = ['url' => $url];
+        $data = array('url' => $url);
 
         if (!is_null($file)) {
             $data['certificate'] = self::encodeFile($file);
@@ -622,7 +622,7 @@ class Request
      */
     public static function emptyResponse()
     {
-        return new ServerResponse(['ok' => true, 'result' => true], null);
+        return new ServerResponse(array('ok' => true, 'result' => true), null);
     }
 
     /**
@@ -654,10 +654,10 @@ class Request
 
         $chats = DB::selectChats($send_groups, $send_super_groups, $send_users, $date_from, $date_to);
 
-        $results = [];
+        $results = array();
         foreach ($chats as $row) {
             $data['chat_id'] = $row['chat_id'];
-            $results[] = call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+            $results[] = call_user_func_array($callback_path . '::' . $callback_function, array($data));
         }
 
         return $results;

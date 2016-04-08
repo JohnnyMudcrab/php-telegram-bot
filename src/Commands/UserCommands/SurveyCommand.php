@@ -53,12 +53,12 @@ class SurveyCommand extends UserCommand
         $user_id = $user->getId();
 
         //Preparing Respose
-        $data = [];
+        $data = array();
         if ($chat->isGroupChat() || $chat->isSuperGroup()) {
             //reply to message id is applied by default
             $data['reply_to_message_id'] = $message_id;
             //Force reply is applied by default to so can work with privacy on
-            $data['reply_markup'] = new ForceReply([ 'selective' => true]);
+            $data['reply_markup'] = new ForceReply(array('selective' => true));
         }
         $data['chat_id'] = $chat_id;
 
@@ -82,7 +82,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
     
                     $data['text'] = 'Type your name:';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -124,14 +124,14 @@ class SurveyCommand extends UserCommand
                     $this->conversation->notes['state'] = 3;
                     $this->conversation->update();
 
-                    $keyboard = [['M','F']];
+                    $keyboard = array(array('M','F'));
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
-                        [
+                        array(
                             'keyboard' => $keyboard ,
                             'resize_keyboard' => true,
                             'one_time_keyboard' => true,
                             'selective' => true
-                        ]
+                        )
                     );
                     $data['reply_markup'] = $reply_keyboard_markup;
                     $data['text'] = 'Select your gender:';
@@ -151,7 +151,7 @@ class SurveyCommand extends UserCommand
                     $this->conversation->update();
 
                     $data['text'] = 'Insert your home location (need location object):';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -169,7 +169,8 @@ class SurveyCommand extends UserCommand
                     $result = Request::sendMessage($data);
                     break;
                 }
-                $this->conversation->notes['photo_id'] = $message->getPhoto()[0]->getFileId();
+                $p = $message->getPhoto();
+                $this->conversation->notes['photo_id'] = $p[0]->getFileId();
 
                 // no break
             case 6:
@@ -180,7 +181,7 @@ class SurveyCommand extends UserCommand
                 }
 
                 $data['photo'] = $this->conversation->notes['photo_id'];
-                $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                 $data['caption'] = $out_text;
                 $this->conversation->stop();
                 $result = Request::sendPhoto($data);

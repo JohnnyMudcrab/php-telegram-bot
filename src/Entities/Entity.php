@@ -39,7 +39,7 @@ class Entity
         $reflection = new \ReflectionObject($object);
         $properties = $reflection->getProperties();
 
-        $fields = [];
+        $fields = array();
 
         foreach ($properties as $property) {
             $name = $property->getName();

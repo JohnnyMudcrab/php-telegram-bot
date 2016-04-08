@@ -37,10 +37,10 @@ class StartCommand extends SystemCommand
         $chat_id = $message->getChat()->getId();
         $text = 'Hi there!' . "\n" . 'Type /help to see all commands!';
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

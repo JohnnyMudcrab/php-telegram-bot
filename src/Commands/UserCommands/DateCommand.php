@@ -79,7 +79,7 @@ class DateCommand extends UserCommand
         $acc = $data['results'][0]['geometry']['location_type'];
         $types = $data['results'][0]['types'];
 
-        return [$lat, $lng, $acc, $types];
+        return array($lat, $lng, $acc, $types);
     }
 
     /**
@@ -121,7 +121,7 @@ class DateCommand extends UserCommand
 
         $local_time = $timestamp + $data['rawOffset'] + $data['dstOffset'];
 
-        return [$local_time, $data['timeZoneId']];
+        return array($local_time, $data['timeZoneId']);
     }
 
     /**
@@ -160,7 +160,7 @@ class DateCommand extends UserCommand
     private function request($url)
     {
         $ch = curl_init();
-        $curlConfig = [CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true];
+        $curlConfig = array(CURLOPT_URL => $url, CURLOPT_RETURNTRANSFER => true);
 
         curl_setopt_array($ch, $curlConfig);
         $response = curl_exec($ch);
@@ -196,11 +196,11 @@ class DateCommand extends UserCommand
             }
         }
 
-        $data = [
+        $data = array(
             'chat_id'             => $chat_id,
             'reply_to_message_id' => $message_id,
             'text'                => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

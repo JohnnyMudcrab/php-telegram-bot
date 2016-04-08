@@ -205,7 +205,8 @@ class ServerResponseTest extends TestCase
 
         $this->assertCount(4, $this->server->getResult());
 
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Update', $this->server->getResult()[0]);
+        $r = $this->server->getResult();
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\Update', $r[0]);
     }
 
     /**
@@ -263,11 +264,12 @@ class ServerResponseTest extends TestCase
         $result = $this->getUserProfilePhotos();
         $this->server = new ServerResponse(json_decode($result, true), 'testbot');
 
-        $this->assertCount(3, $this->server->getResult()->getPhotos());
-        $this->assertCount(3, $this->server->getResult()->getPhotos()[0]);
+        $p = $this->server->getResult()->getPhotos();
+        $this->assertCount(3, $p);
+        $this->assertCount(3, $p[0]);
         $this->assertInstanceOf('\Longman\TelegramBot\Entities\UserProfilePhotos', $this->server->getResult());
 
-        $this->assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $this->server->getResult()->getPhotos()[0][0]);
+        $this->assertInstanceOf('\Longman\TelegramBot\Entities\PhotoSize', $p[0][0]);
 
     }
 
@@ -319,7 +321,7 @@ class ServerResponseTest extends TestCase
 
 
         //sendMessage ok
-        $fake_response = Request::generateGeneralFakeServerResponse(['chat_id' => 123456789, 'text' => 'hello']);
+        $fake_response = Request::generateGeneralFakeServerResponse(array('chat_id' => 123456789, 'text' => 'hello'));
 
         $this->server =  new ServerResponse($fake_response, 'testbot');
 

@@ -90,7 +90,7 @@ abstract class Command
      *
      * @var array
      */
-    protected $config = [];
+    protected $config = array();
 
     /**
      * Constructor
@@ -151,10 +151,10 @@ abstract class Command
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => 'Sorry no database connection, unable to execute "' . $this->name . '" command.',
-        ];
+        );
 
         return Request::sendMessage($data);
     }

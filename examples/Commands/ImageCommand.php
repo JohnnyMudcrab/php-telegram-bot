@@ -37,7 +37,7 @@ class ImageCommand extends UserCommand
         $chat_id = $message->getChat()->getId();
         $text = $message->getText(true);
 
-        $data = [];
+        $data = array();
         $data['chat_id'] = $chat_id;
         $data['caption'] = $text;
 

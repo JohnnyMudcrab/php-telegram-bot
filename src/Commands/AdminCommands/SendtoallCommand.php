@@ -47,7 +47,7 @@ class SendtoallCommand extends AdminCommand
         } else {
             $results = Request::sendToActiveChats(
                 'sendMessage', //callback function to execute (see Request.php methods)
-                ['text' => $text], //Param to evaluate the request
+                array('text' => $text), //Param to evaluate the request
                 true, //Send to groups (group chat)
                 true, //Send to super groups chats (super group chat)
                 true, //Send to users (single chat)
@@ -64,7 +64,7 @@ class SendtoallCommand extends AdminCommand
                 $type = '';
                 print_r($result);
                 if ($result->isOk()) {
-                    $status = '✔️';
+                    $status = 'âœ”ï¸�';
 
                     $ServerResponse = $result->getResult();
                     $chat = $ServerResponse->getChat();
@@ -76,7 +76,7 @@ class SendtoallCommand extends AdminCommand
                         $type = 'chat';
                     }
                 } else {
-                    $status = '✖️';
+                    $status = 'âœ–ï¸�';
                     ++$fail;
                 }
                 ++$tot;
@@ -90,10 +90,10 @@ class SendtoallCommand extends AdminCommand
             }
         }
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

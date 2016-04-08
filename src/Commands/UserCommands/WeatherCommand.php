@@ -40,10 +40,10 @@ class WeatherCommand extends UserCommand
         $url = 'http://api.openweathermap.org/data/2.5/weather?q=' . $location . '&units=metric';
 
         $ch = curl_init();
-        $curlConfig = [
+        $curlConfig = array(
             CURLOPT_URL            => $url,
             CURLOPT_RETURNTRANSFER => true,
-        ];
+        );
 
         curl_setopt_array($ch, $curlConfig);
         $response = curl_exec($ch);
@@ -80,24 +80,24 @@ class WeatherCommand extends UserCommand
 
             $city = $decode['name'];
             $country = $decode['sys']['country'];
-            $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
+            $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . 'Â°C';
             $conditions = 'Current conditions are: ' . $decode['weather'][0]['description'];
 
             switch (strtolower($decode['weather'][0]['main'])) {
                 case 'clear':
-                    $conditions .= ' ☀';
+                    $conditions .= ' â˜€';
                     break;
 
                 case 'clouds':
-                    $conditions .= ' ☁☁';
+                    $conditions .= ' â˜�â˜�';
                     break;
 
                 case 'rain':
-                    $conditions .= ' ☔';
+                    $conditions .= ' â˜”';
                     break;
 
                 case 'thunderstorm':
-                    $conditions .= ' ☔☔☔☔';
+                    $conditions .= ' â˜”â˜”â˜”â˜”';
                     break;
             }
 
@@ -131,11 +131,11 @@ class WeatherCommand extends UserCommand
             }
         }
 
-        $data = [
+        $data = array(
             'chat_id'             => $chat_id,
             'reply_to_message_id' => $message_id,
             'text'                => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

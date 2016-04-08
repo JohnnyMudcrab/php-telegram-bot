@@ -33,12 +33,12 @@ class ConversationTest extends TestCase
      */
     protected function setUp()
     {
-        $credentials = [
+        $credentials = array(
             'host'     => '127.0.0.1',
             'user'     => 'travis',
             'password' => '',
             'database' => 'telegrambot',
-        ];
+        );
 
         $this->telegram = new Telegram('testapikey', 'testbotname');
         $this->telegram->enableMySQL($credentials);

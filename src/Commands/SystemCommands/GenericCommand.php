@@ -37,10 +37,10 @@ class GenericCommand extends SystemCommand
         $command = $message->getCommand();
         $chat_id = $message->getChat()->getId();
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => 'Command /' . $command . ' not found.. :(',
-        ];
+        );
 
         return Request::sendMessage($data);
     }

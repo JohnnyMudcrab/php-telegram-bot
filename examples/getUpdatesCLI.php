@@ -13,12 +13,12 @@ require __DIR__ . '/vendor/autoload.php';
 $API_KEY = 'your_bot_api_key';
 $BOT_NAME = 'namebot';
 //$commands_path = __DIR__ . '/Commands/';
-$mysql_credentials = [
+$mysql_credentials = array(
    'host'     => 'localhost',
    'user'     => 'dbuser',
    'password' => 'dbpass',
    'database' => 'dbname',
-];
+);
 
 try {
     // Create Telegram API object

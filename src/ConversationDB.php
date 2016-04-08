@@ -49,7 +49,7 @@ class ConversationDB extends DB
             $query .= 'AND `chat_id` = :chat_id ';
             $query .= 'AND `user_id` = :user_id ';
 
-            $tokens = [':chat_id' => $chat_id, ':user_id' => $user_id];
+            $tokens = array(':chat_id' => $chat_id, ':user_id' => $user_id);
             if (!is_null($limit)) {
                 $query .= ' LIMIT :limit';
             }
@@ -147,7 +147,7 @@ class ConversationDB extends DB
 
         //Values
         $update = '';
-        $tokens = [];
+        $tokens = array();
         $tokens_counter = 0;
         $a = 0;
         foreach ($fields_values as $field => $value) {

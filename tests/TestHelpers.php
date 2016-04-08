@@ -30,25 +30,25 @@ class TestHelpers
      *
      * @var array
      */
-    protected static $user_template = [
+    protected static $user_template = array(
         'id' => 1,
         'first_name' => 'first',
         'last_name' => 'last',
         'username' => 'user',
-    ];
+    );
 
     /**
      * Data template of a chat.
      *
      * @var array
      */
-    protected static $chat_template = [
+    protected static $chat_template = array(
         'id' => 1,
         'first_name' => 'first',
         'last_name' => 'last',
         'username' => 'name',
         'type' => 'private',
-    ];
+    );
 
     /**
      * Set the value of a private/protected property of an object
@@ -74,16 +74,16 @@ class TestHelpers
      */
     public static function getFakeUpdateObject($data = null)
     {
-        $data = $data ?: [
+        $data = $data ?: array(
             'update_id' => 1,
-            'message'   => [
+            'message'   => array(
                 'message_id' => 1,
-                'chat' => [
+                'chat' => array(
                     'id' => 1,
-                ],
+                ),
                 'date' => 1,
-            ]
-        ];
+            )
+        );
         return new Update($data, 'botname');
     }
 
@@ -96,16 +96,16 @@ class TestHelpers
      */
     public static function getFakeUpdateCommandObject($command_text)
     {
-        $data = [
+        $data = array(
             'update_id' => 1,
-            'message' => [
+            'message' => array(
                 'message_id' => 1,
                 'from'       => self::$user_template,
                 'chat'       => self::$chat_template,
                 'date'       => 1,
                 'text'       => $command_text,
-            ],
-        ];
+            ),
+        );
         return self::getFakeUpdateObject($data);
     }
 
@@ -140,12 +140,12 @@ class TestHelpers
      */
     public static function getFakeMessageObject($message_id = 1, $user_id = 1, $chat_id = 1)
     {
-        return new Message([
+        return new Message(array(
             'message_id' => $message_id,
-            'from'       => ['id' => $user_id] + self::$user_template,
-            'chat'       => ['id' => $chat_id] + self::$chat_template,
+            'from'       => array('id' => $user_id) + self::$user_template,
+            'chat'       => array('id' => $chat_id) + self::$chat_template,
             'date'       => 1,
-        ], 'botname');
+        ), 'botname');
     }
 
     /**
@@ -181,7 +181,7 @@ class TestHelpers
     public static function emptyDB(array $credentials)
     {
         $dsn = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
+        $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
         try {
             $pdo = new \PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->prepare('

@@ -44,7 +44,7 @@ class WhoamiCommand extends UserCommand
         $text = $message->getText(true);
 
         //Send chat action
-        Request::sendChatAction(['chat_id' => $chat_id, 'action' => 'typing']);
+        Request::sendChatAction(array('chat_id' => $chat_id, 'action' => 'typing'));
 
         $caption = 'Your Id: ' . $user_id . "\n";
         $caption .= 'Name: ' . $message->getFrom()->getFirstName()
@@ -54,11 +54,11 @@ class WhoamiCommand extends UserCommand
         //Fetch user profile photo
         $limit = 10;
         $offset = null;
-        $ServerResponse = Request::getUserProfilePhotos([
+        $ServerResponse = Request::getUserProfilePhotos(array(
             'user_id' => $user_id ,
             'limit'   => $limit,
             'offset'  => $offset,
-        ]);
+        ));
 
         //Check if the request isOK
         if ($ServerResponse->isOk()) {
@@ -68,10 +68,10 @@ class WhoamiCommand extends UserCommand
             $totalcount = 0;
         }
 
-        $data = [
+        $data = array(
             'chat_id'             => $chat_id,
             'reply_to_message_id' => $message_id,
-        ];
+        );
 
         if ($totalcount > 0) {
             $photos = $UserProfilePhoto->getPhotos();
@@ -87,7 +87,7 @@ class WhoamiCommand extends UserCommand
             //Download the image pictures
             //Download after send message response to speedup response
             $file_id = $photo->getFileId();
-            $ServerResponse = Request::getFile(['file_id' => $file_id]);
+            $ServerResponse = Request::getFile(array('file_id' => $file_id));
             if ($ServerResponse->isOk()) {
                 Request::downloadFile($ServerResponse->getResult());
             }

@@ -78,10 +78,10 @@ class ChatsCommand extends AdminCommand
             $text .= "\n" . 'Total: ' . ($user_chats + $group_chats + $super_group_chats);
         }
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

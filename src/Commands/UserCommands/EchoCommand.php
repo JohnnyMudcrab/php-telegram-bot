@@ -40,10 +40,10 @@ class EchoCommand extends UserCommand
             $text = 'Command usage: ' . $this->getUsage();
         }
 
-        $data = [
+        $data = array(
             'chat_id' => $chat_id,
             'text'    => $text,
-        ];
+        );
 
         return Request::sendMessage($data);
     }

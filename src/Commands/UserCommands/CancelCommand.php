@@ -72,10 +72,10 @@ class CancelCommand extends UserCommand
      */
     private function hideKeyboard($text = '')
     {
-        return Request::sendMessage([
-            'reply_markup' => new ReplyKeyboardHide(['selective' => true]),
+        return Request::sendMessage(array(
+            'reply_markup' => new ReplyKeyboardHide(array('selective' => true)),
             'chat_id'      => $this->getMessage()->getChat()->getId(),
             'text'         => $text,
-        ]);
+        ));
     }
 }

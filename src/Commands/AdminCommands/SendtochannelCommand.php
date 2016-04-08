@@ -51,7 +51,7 @@ class SendtochannelCommand extends AdminCommand
         $type = ($type == 'command') ? 'Message' : $type;
         $text = trim($message->getText(true));
 
-        $data = [];
+        $data = array();
         $data['chat_id'] = $chat_id;
 
         // Conversation
@@ -72,7 +72,7 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->update();
 
                     $data['text'] = 'Insert the channel name: (@yourchannel)';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                     $result = Request::sendMessage($data);
 
                     break;
@@ -90,17 +90,17 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->notes['state'] = 0;
                     $this->conversation->update();
 
-                    $keyboard = [];
+                    $keyboard = array();
                     foreach ($channels as $channel) {
-                        $keyboard[] = [$channel];
+                        $keyboard[] = array($channel);
                     }
                     $reply_keyboard_markup = new ReplyKeyboardMarkup(
-                        [
+                        array(
                             'keyboard' => $keyboard ,
                             'resize_keyboard' => true,
                             'one_time_keyboard' => true,
                             'selective' => true
-                        ]
+                        )
                     );
                     $data['reply_markup'] = $reply_keyboard_markup;
                     $data['text'] = 'Select a channel';
@@ -120,7 +120,7 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->notes['state'] = 1;
                     $this->conversation->update();
 
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                     $data['text'] = 'Insert the content you want to share: text, photo, audio...';
                     $result = Request::sendMessage($data);
                     break;
@@ -137,14 +137,14 @@ class SendtochannelCommand extends AdminCommand
 
                     // Execute this just with object that allow caption
                     if ($this->conversation->notes['message_type'] == 'Video' || $this->conversation->notes['message_type'] == 'Photo') {
-                        $keyboard = [['Yes', 'No']];
+                        $keyboard = array(array('Yes', 'No'));
                         $reply_keyboard_markup = new ReplyKeyboardMarkup(
-                            [
-                                'keyboard' => $keyboard ,
+                            array(
+                                'keyboard' => $keyboard,
                                 'resize_keyboard' => true,
                                 'one_time_keyboard' => true,
                                 'selective' => true
-                            ]
+                            )
                         );
                         $data['reply_markup'] = $reply_keyboard_markup;
 
@@ -168,7 +168,7 @@ class SendtochannelCommand extends AdminCommand
                     $this->conversation->update();
 
                     $data['text'] = 'Insert caption:';
-                    $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                    $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
                     $result = Request::sendMessage($data);
                     break;
                 }
@@ -193,14 +193,14 @@ class SendtochannelCommand extends AdminCommand
                         if ($this->conversation->notes['last_message_id'] != $message->getMessageId() && !($text == 'Yes' || $text == 'No')) {
                             $data['text'] = 'Would you post it?' . "\n" . 'Press Yes or No';
                         }
-                        $keyboard = [['Yes', 'No']];
+                        $keyboard = array(array('Yes', 'No'));
                         $reply_keyboard_markup = new ReplyKeyboardMarkup(
-                            [
+                            array(
                                 'keyboard' => $keyboard ,
                                 'resize_keyboard' => true,
                                 'one_time_keyboard' => true,
                                 'selective' => true
-                            ]
+                            )
                         );
                         $data['reply_markup'] = $reply_keyboard_markup;
                         $result = Request::sendMessage($data);
@@ -215,7 +215,7 @@ class SendtochannelCommand extends AdminCommand
                 $this->conversation->notes['last_message_id'] = $message->getMessageId();
                 // no break
             case 5:
-                $data['reply_markup'] = new ReplyKeyBoardHide(['selective' => true]);
+                $data['reply_markup'] = new ReplyKeyBoardHide(array('selective' => true));
 
                 if ($this->conversation->notes['post_message']) {
                     $data['text'] = $this->publish(
@@ -242,7 +242,7 @@ class SendtochannelCommand extends AdminCommand
         $text = trim($message->getText(true));
         $chat_id = $message->getChat()->getId();
 
-        $data = [];
+        $data = array();
         $data['chat_id'] = $chat_id;
 
         if (empty($text)) {
@@ -266,10 +266,10 @@ class SendtochannelCommand extends AdminCommand
      */
     protected function publish(Message $message, $channel, $caption = null)
     {
-        $data = [
+        $data = array(
             'chat_id' => $channel,
             'caption' => $caption,
-        ];
+        );
 
         if ($this->sendBack($message, $data)->isOk()) {
             $response = 'Message sent successfully to: ' . $channel;
@@ -311,7 +311,8 @@ class SendtochannelCommand extends AdminCommand
         } elseif ($type == 'Document') {
             $data['document'] = $message->getDocument()->getFileId();
         } elseif ($type == 'Photo') {
-            $data['photo'] = $message->getPhoto()[0]->getFileId();
+        	$p = $message->getPhoto();
+            $data['photo'] = $p[0]->getFileId();
         } elseif ($type == 'Sticker') {
             $data['sticker'] = $message->getSticker()->getFileId();
         } elseif ($type == 'Video') {
@@ -328,6 +329,6 @@ class SendtochannelCommand extends AdminCommand
             throw new TelegramException('Methods: ' . $callback_function . ' not found in class Request.');
         }
 
-        return call_user_func_array($callback_path . '::' . $callback_function, [$data]);
+        return call_user_func_array($callback_path . '::' . $callback_function, array($data));
     }
 }

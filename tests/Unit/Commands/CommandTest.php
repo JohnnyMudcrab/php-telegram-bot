@@ -35,11 +35,11 @@ class CommandTest extends TestCase
     {
         //Default command object
         $this->telegram = new Telegram('apikey', 'botname');
-        $this->command_stub = $this->getMockForAbstractClass($this->command_namespace, [$this->telegram]);
+        $this->command_stub = $this->getMockForAbstractClass($this->command_namespace, array($this->telegram));
 
         //Create separate command object that contain a command config
         $this->telegram_with_config = new Telegram('apikey', 'botname');
-        $this->telegram_with_config->setCommandConfig('command_name', ['config_key' => 'config_value']);
+        $this->telegram_with_config->setCommandConfig('command_name', array('config_key' => 'config_value'));
         $this->command_stub_with_config = $this->getMockBuilder($this->command_namespace)
              ->disableOriginalConstructor()
              ->getMockForAbstractClass();
@@ -54,12 +54,12 @@ class CommandTest extends TestCase
     public function testCommandConstructorNeedsTelegramObject()
     {
         $error_message = 'must be an instance of Longman\TelegramBot\Telegram';
-        $params_to_test = [
-            [],
-            [null],
-            ['something'],
-            [new \stdClass],
-        ];
+        $params_to_test = array(
+            array(),
+            array(null),
+            array('something'),
+            array(new \stdClass),
+        );
 
         foreach ($params_to_test as $param) {
             try {
@@ -139,7 +139,7 @@ class CommandTest extends TestCase
      */
     public function testDefaultCommandEmptyConfig()
     {
-        $this->assertAttributeEquals([], 'config', $this->command_stub);
+        $this->assertAttributeEquals(array(), 'config', $this->command_stub);
     }
 
     /**
@@ -187,9 +187,9 @@ class CommandTest extends TestCase
      */
     public function testCommandWithConfigCorrectConfig()
     {
-        $this->assertAttributeEquals(['config_key' => 'config_value'], 'config', $this->command_stub_with_config);
-        $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig(null));
-        $this->assertEquals(['config_key' => 'config_value'], $this->command_stub_with_config->getConfig());
+        $this->assertAttributeEquals(array('config_key' => 'config_value'), 'config', $this->command_stub_with_config);
+        $this->assertEquals(array('config_key' => 'config_value'), $this->command_stub_with_config->getConfig(null));
+        $this->assertEquals(array('config_key' => 'config_value'), $this->command_stub_with_config->getConfig());
         $this->assertEquals('config_value', $this->command_stub_with_config->getConfig('config_key'));
         $this->assertEquals(null, $this->command_stub_with_config->getConfig('not_config_key'));
     }

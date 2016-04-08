@@ -36,15 +36,15 @@ class InlinequeryCommand extends SystemCommand
         $inline_query = $update->getInlineQuery();
         $query = $inline_query->getQuery();
 
-        $data = ['inline_query_id' => $inline_query->getId()];
+        $data = array('inline_query_id' => $inline_query->getId());
 
-        $articles = [
-            ['id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
-            ['id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
-            ['id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query],
-        ];
+        $articles = array(
+            array('id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
+            array('id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
+            array('id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
+        );
 
-        $array_article = [];
+        $array_article = array();
         foreach ($articles as $article) {
             $array_article[] = new InlineQueryResultArticle($article);
         }
