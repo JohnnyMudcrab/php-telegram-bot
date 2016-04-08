@@ -183,9 +183,13 @@ class Request
             CURLOPT_URL            => 'https://api.telegram.org/bot' . self::$telegram->getApiKey() . '/' . $action,
             CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SAFE_UPLOAD    => true,
+//            CURLOPT_SAFE_UPLOAD    => true,
         );
-
+        // PHP 5.3 compatibility
+        if ((version_compare(PHP_VERSION, '5.5') >= 0)) $curlConfig[CURLOPT_SAFE_UPLOAD] = true;
+        
+                
+        
         if (!empty($data)) {
             $curlConfig[CURLOPT_POSTFIELDS] = $data;
         }
@@ -289,7 +293,12 @@ class Request
      */
     protected static function encodeFile($file)
     {
-        return new \CURLFile($file);
+        // PHP 5.3 compatibility
+        if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
+            return new CURLFile($file);
+        } else {
+            return "@".$file;
+        }
     }
 
     /**
