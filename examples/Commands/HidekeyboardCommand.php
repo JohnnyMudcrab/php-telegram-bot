@@ -12,7 +12,6 @@ namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Entities\ReplyKeyboardMarkup;
 
 /**
  * User "/hidekeyboard" command
