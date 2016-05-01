@@ -80,24 +80,24 @@ class WeatherCommand extends UserCommand
 
             $city = $decode['name'];
             $country = $decode['sys']['country'];
-            $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . 'Â°C';
+            $temp = 'The temperature in ' . $city . ' (' . $country . ') is ' . $decode['main']['temp'] . '°C';
             $conditions = 'Current conditions are: ' . $decode['weather'][0]['description'];
 
             switch (strtolower($decode['weather'][0]['main'])) {
                 case 'clear':
-                    $conditions .= ' â˜€';
+                    $conditions .= ' ☀';
                     break;
 
                 case 'clouds':
-                    $conditions .= ' â˜�â˜�';
+                    $conditions .= ' ☁☁';
                     break;
 
                 case 'rain':
-                    $conditions .= ' â˜”';
+                    $conditions .= ' ☔';
                     break;
 
                 case 'thunderstorm':
-                    $conditions .= ' â˜”â˜”â˜”â˜”';
+                    $conditions .= ' ☔☔☔☔';
                     break;
             }
 
