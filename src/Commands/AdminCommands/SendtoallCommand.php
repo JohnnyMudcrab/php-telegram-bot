@@ -64,7 +64,7 @@ class SendtoallCommand extends AdminCommand
                 $type = '';
                 print_r($result);
                 if ($result->isOk()) {
-                    $status = 'âœ”ï¸�';
+                    $status = '✔';
 
                     $ServerResponse = $result->getResult();
                     $chat = $ServerResponse->getChat();
@@ -76,7 +76,7 @@ class SendtoallCommand extends AdminCommand
                         $type = 'chat';
                     }
                 } else {
-                    $status = 'âœ–ï¸�';
+                    $status = '✖';
                     ++$fail;
                 }
                 ++$tot;
