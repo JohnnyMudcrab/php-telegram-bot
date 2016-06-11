@@ -30,7 +30,7 @@ class Telegram
      *
      * @var string
      */
-    protected $version = '0.29.0';
+    protected $version = '0.33.0';
 
     /**
      * Telegram API key
@@ -68,20 +68,6 @@ class Telegram
     protected $update;
 
     /**
-     * Log verbose curl output
-     *
-     * @var bool
-     */
-    protected $log_requests;
-
-    /**
-     * Log path
-     *
-     * @var string
-     */
-    protected $log_path;
-
-    /**
      * Upload path
      *
      * @var string
@@ -94,13 +80,6 @@ class Telegram
      * @var string
      */
     protected $download_path;
-
-    /**
-     * Log verbosity
-     *
-     * @var int
-     */
-    protected $log_verbosity = 1;
 
     /**
      * MySQL integration
@@ -138,6 +117,13 @@ class Telegram
     protected $last_command_response;
 
     /**
+     * Botan.io integration
+     *
+     * @var boolean
+     */
+    protected $botan_enabled = false;
+
+    /**
      * Constructor
      *
      * @param string $api_key
@@ -167,19 +153,32 @@ class Telegram
     }
 
     /**
-     * Initialize
+     * Initialize Database connection
      *
-     * @param array $credential
+     * @param array  $credential
      * @param string $table_prefix
      *
      * @return Telegram
      */
-    public function enableMySql(array $credential, $table_prefix = null)
+    public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
     {
-        $this->pdo = DB::initialize($credential, $this, $table_prefix);
+        $this->pdo = DB::initialize($credential, $this, $table_prefix, $encoding);
         ConversationDB::initializeConversation();
         $this->mysql_enabled = true;
         return $this;
+    }
+
+    /**
+     * Initialize Database external connection
+     *
+     * @param PDO    $external_pdo_connection PDO database object
+     * @param string $table_prefix
+     */
+    public function enableExternalMysql($external_pdo_connection, $table_prefix = null)
+    {
+        $this->pdo = DB::externalInitialize($external_pdo_connection, $this, $table_prefix);
+        ConversationDB::initializeConversation();
+        $this->mysql_enabled = true;
     }
 
     /**
@@ -212,6 +211,7 @@ class Telegram
 
                     require_once $file->getPathname();
 
+
                     $command_obj = $this->getCommandObject($command);
                     if ($command_obj instanceof Commands\Command) {
                         $commands[$command_name] = $command_obj;
@@ -239,88 +239,13 @@ class Telegram
         $which[] = 'User';
 
         foreach ($which as $auth) {
-            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . ucfirst($command) . 'Command';
+            $command_namespace = __NAMESPACE__ . '\\Commands\\' . $auth . 'Commands\\' . $this->ucfirstUnicode($command) . 'Command';
             if (class_exists($command_namespace)) {
                 return new $command_namespace($this, $this->update);
             }
         }
 
         return null;
-    }
-
-    /**
-     * Set log requests
-     *
-     * 0 don't store
-     * 1 store the Curl verbose output with Telegram updates
-     *
-     * @param bool $log_requests
-     *
-     * @return Telegram
-     */
-    public function setLogRequests($log_requests)
-    {
-        $this->log_requests = $log_requests;
-        return $this;
-    }
-
-    /**
-     * Get log requests
-     *
-     * @return bool
-     */
-    public function getLogRequests()
-    {
-        return $this->log_requests;
-    }
-
-    /**
-     * Set log path
-     *
-     * @param string $log_path
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogPath($log_path)
-    {
-        $this->log_path = $log_path;
-        return $this;
-    }
-
-    /**
-     * Get log path
-     *
-     * @return string
-     */
-    public function getLogPath()
-    {
-        return $this->log_path;
-    }
-
-    /**
-     * Set log Verbosity
-     *
-     * @param int $log_verbosity
-     *
-     * 1 only incoming updates from webhook and getUpdates
-     * 3 incoming updates from webhook and getUpdates and curl request info and response
-     *
-     * @return \Longman\TelegramBot\Telegram
-     */
-    public function setLogVerbosity($log_verbosity)
-    {
-        $this->log_verbosity = $log_verbosity;
-        return $this;
-    }
-
-    /**
-     * Get log verbosity
-     *
-     * @return int
-     */
-    public function getLogVerbosity()
-    {
-        return $this->log_verbosity;
     }
 
     /**
@@ -417,7 +342,7 @@ class Telegram
      */
     private function getCommandFromType($type)
     {
-        return ucfirst(str_replace('_', '', $type));
+        return $this->ucfirstUnicode(str_replace('_', '', $type));
     }
 
     /**
@@ -435,7 +360,7 @@ class Telegram
         $command = 'genericmessage';
 
         $update_type = $this->update->getUpdateType();
-        if (in_array($update_type, array('inline_query', 'chosen_inline_result'))) {
+        if (in_array($update_type, array('inline_query', 'chosen_inline_result', 'callback_query', 'edited_message'))) {
             $command = $this->getCommandFromType($update_type);
         } elseif ($update_type === 'message') {
             $message = $this->update->getMessage();
@@ -454,8 +379,11 @@ class Telegram
                 'channel_chat_created',
                 'delete_chat_photo',
                 'group_chat_created',
-                'left_chat_participant',
-                'new_chat_participant',
+                'left_chat_member',
+                'migrate_from_chat_id',
+                'migrate_to_chat_id',
+                'new_chat_member',
+                'new_chat_photo',
                 'new_chat_title',
                 'supergroup_chat_created',
             ))) {
@@ -492,9 +420,19 @@ class Telegram
             //Handle a generic command or non existing one
             $this->last_command_response = $this->executeCommand('Generic');
         } else {
+            //Botan.io integration, make sure only the command user executed is reported
+            if ($this->botan_enabled) {
+                Botan::lock($command);
+            }
+
             //execute() method is executed after preExecute()
             //This is to prevent executing a DB query without a valid connection
             $this->last_command_response = $command_obj->preExecute();
+
+            //Botan.io integration, send report after executing the command
+            if ($this->botan_enabled) {
+                Botan::track($this->update, $command);
+            }
         }
 
         return $this->last_command_response;
@@ -505,7 +443,7 @@ class Telegram
      */
     protected function sanitizeCommand($command)
     {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $command)));
+        return str_replace(' ', '', $this->ucwordsUnicode(str_replace('_', ' ', $command)));
     }
 
     /**
@@ -551,6 +489,14 @@ class Telegram
     {
         if ($user_id === null && $this->update !== null) {
             if (($message = $this->update->getMessage()) && ($from = $message->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($inline_query = $this->update->getInlineQuery()) && ($from = $inline_query->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($chosen_inline_result = $this->update->getChosenInlineResult()) && ($from = $chosen_inline_result->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($callback_query = $this->update->getCallbackQuery()) && ($from = $callback_query->getFrom())) {
+                $user_id = $from->getId();
+            } elseif (($edited_message = $this->update->getEditedMessage()) && ($from = $edited_message->getFrom())) {
                 $user_id = $from->getId();
             }
         }
@@ -742,5 +688,44 @@ class Telegram
         }
 
         return $result;
+    }
+
+    /**
+     * Replace function `ucwords` for UTF-8 characters in the class definition and commands
+     *
+     * @param string $str
+     * @param string $encoding (default = 'UTF-8')
+     *
+     * @return string
+     */
+    protected function ucwordsUnicode($str, $encoding = 'UTF-8')
+    {
+        return mb_convert_case($str, MB_CASE_TITLE, $encoding);
+    }
+
+    /**
+     * Replace function `ucfirst` for UTF-8 characters in the class definition and commands
+     *
+     * @param string $str
+     * @param string $encoding (default = 'UTF-8')
+     *
+     * @return string
+     */
+    protected function ucfirstUnicode($str, $encoding = 'UTF-8')
+    {
+        return mb_strtoupper(mb_substr($str, 0, 1, $encoding), $encoding) . mb_strtolower(mb_substr($str, 1, mb_strlen($str), $encoding), $encoding);
+    }
+
+    /**
+     * Enable Botan.io integration
+     *
+     * @param  $token
+     * @return Telegram
+     */
+    public function enableBotan($token)
+    {
+        Botan::initializeBotan($token);
+        $this->botan_enabled = true;
+        return $this;
     }
 }

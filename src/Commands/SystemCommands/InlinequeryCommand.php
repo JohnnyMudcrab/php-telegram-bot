@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\InlineQueryResultArticle;
+use Longman\TelegramBot\Entities\InputTextMessageContent;
 use Longman\TelegramBot\Request;
 
 /**
@@ -38,11 +39,13 @@ class InlinequeryCommand extends SystemCommand
 
         $data = array('inline_query_id' => $inline_query->getId());
 
+
         $articles = array(
-            array('id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
-            array('id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
-            array('id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query),
+            array('id' => '001', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => new InputTextMessageContent(array( 'message_text' => ' ' . $query ))),
+            array('id' => '002', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => new InputTextMessageContent(array( 'message_text' => ' ' . $query ))),
+            array('id' => '003', 'title' => 'https://core.telegram.org/bots/api#answerinlinequery', 'message_text' => 'you enter: ' . $query , 'input_message_content' => new InputTextMessageContent(array( 'message_text' => ' ' . $query ))),
         );
+
 
         $array_article = array();
         foreach ($articles as $article) {

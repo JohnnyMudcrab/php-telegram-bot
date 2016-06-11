@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -22,7 +22,6 @@ class Document extends Entity
 
     public function __construct(array $data)
     {
-
         $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
         if (empty($this->file_id)) {
             throw new TelegramException('file_id is empty!');
@@ -36,7 +35,6 @@ class Document extends Entity
         $this->file_name = isset($data['file_name']) ? $data['file_name'] : null;
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-
     }
 
     public function getFileId()
@@ -44,23 +42,23 @@ class Document extends Entity
         return $this->file_id;
     }
 
-    public function getthumb()
+    public function getThumb()
     {
-          return $this->thumb;
+        return $this->thumb;
     }
 
     public function getFileName()
     {
-         return $this->file_name;
+        return $this->file_name;
     }
 
     public function getMimeType()
     {
-         return $this->mime_type;
+        return $this->mime_type;
     }
 
     public function getFileSize()
     {
-         return $this->file_size;
+        return $this->file_size;
     }
 }

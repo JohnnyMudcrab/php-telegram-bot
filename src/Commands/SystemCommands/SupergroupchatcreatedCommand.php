@@ -11,7 +11,6 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Request;
 
 /**
  * Super group chat created command
@@ -29,23 +28,9 @@ class SupergroupchatcreatedCommand extends SystemCommand
     /**
      * {@inheritdoc}
      */
-    public function execute()
+    /*public function execute()
     {
-        $message = $this->getMessage();
-
-        $chat_id = $message->getChat()->getId();
-        $text = '';
-
-        if ($message->getSuperGroupChatCreated()) {
-            $text = 'Your group has become a Supergroup!' . "\n";
-            $text .= 'Chat id has changed from ' . $message->getMigrateFromChatId() . ' to ' . $message->getMigrateToChatId();
-        }
-
-        $data = array(
-            'chat_id' => $chat_id,
-            'text'    => $text,
-        );
-
-        return Request::sendMessage($data);
-    }
+        //$message = $this->getMessage();
+        //$supergroup_chat_created = $message->getSuperGroupChatCreated();
+    }*/
 }

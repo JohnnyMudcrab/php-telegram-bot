@@ -1,13 +1,12 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
 
 namespace Longman\TelegramBot\Entities;
 
@@ -25,7 +24,11 @@ class Message extends Entity
 
     protected $forward_from;
 
+    protected $forward_from_chat;
+
     protected $forward_date;
+
+    protected $edit_date;
 
     protected $reply_to_message;
 
@@ -49,9 +52,11 @@ class Message extends Entity
 
     protected $location;
 
-    protected $new_chat_participant;
+    protected $venue;
 
-    protected $left_chat_participant;
+    protected $new_chat_member;
+
+    protected $left_chat_member;
 
     protected $new_chat_title;
 
@@ -69,6 +74,9 @@ class Message extends Entity
 
     protected $migrate_from_chat_id;
 
+    protected $pinned_message;
+
+    protected $entities;
 
     private $command;
 
@@ -118,7 +126,14 @@ class Message extends Entity
             $this->forward_from = new User($this->forward_from);
         }
 
+        $this->forward_from_chat = isset($data['forward_from_chat']) ? $data['forward_from_chat'] : null;
+        if (!empty($this->forward_from_chat)) {
+            $this->forward_from_chat = new Chat($this->forward_from_chat);
+        }
+
         $this->forward_date = isset($data['forward_date']) ? $data['forward_date'] : null;
+
+        $this->edit_date = isset($data['edit_date']) ? $data['edit_date'] : null;
 
         $this->text = isset($data['text']) ? $data['text'] : null;
         $command = $this->getCommand();
@@ -180,16 +195,31 @@ class Message extends Entity
             $this->type = 'Location';
         }
 
-        $this->new_chat_participant = isset($data['new_chat_participant']) ? $data['new_chat_participant'] : null;
-        if (!empty($this->new_chat_participant)) {
-            $this->new_chat_participant = new User($this->new_chat_participant);
-            $this->type = 'new_chat_participant';
+        $this->venue = isset($data['venue']) ? $data['venue'] : null;
+        if (!empty($this->venue)) {
+            $this->venue = new Venue($this->venue);
+            $this->type = 'Venue';
         }
 
-        $this->left_chat_participant = isset($data['left_chat_participant']) ? $data['left_chat_participant'] : null;
-        if (!empty($this->left_chat_participant)) {
-            $this->left_chat_participant = new User($this->left_chat_participant);
-            $this->type = 'left_chat_participant';
+        //retrocompatibility
+        if (isset($data['new_chat_participant'])) {
+            $data['new_chat_member'] = $data['new_chat_participant'];
+        }
+
+        if (isset($data['left_chat_participant'])) {
+            $data['left_chat_member'] = $data['left_chat_participant'];
+        }
+
+        $this->new_chat_member = isset($data['new_chat_member']) ? $data['new_chat_member'] : null;
+        if (!empty($this->new_chat_member)) {
+            $this->new_chat_member = new User($this->new_chat_member);
+            $this->type = 'new_chat_member';
+        }
+
+        $this->left_chat_member = isset($data['left_chat_member']) ? $data['left_chat_member'] : null;
+        if (!empty($this->left_chat_member)) {
+            $this->left_chat_member = new User($this->left_chat_member);
+            $this->type = 'left_chat_member';
         }
 
         $this->new_chat_title = isset($data['new_chat_title']) ? $data['new_chat_title'] : null;
@@ -205,6 +235,7 @@ class Message extends Entity
                 }
             }
             $this->new_chat_photo = $photos;
+            $this->type = 'new_chat_photo';
         }
 
         $this->delete_chat_photo = isset($data['delete_chat_photo']) ? $data['delete_chat_photo'] : null;
@@ -228,8 +259,29 @@ class Message extends Entity
         }
 
         $this->migrate_to_chat_id = isset($data['migrate_to_chat_id']) ? $data['migrate_to_chat_id'] : null;
-        $this->migrate_from_chat_id = isset($data['migrate_from_chat_id']) ? $data['migrate_from_chat_id'] : null;
+        if ($this->migrate_to_chat_id) {
+            $this->type = 'migrate_to_chat_id';
+        }
 
+        $this->migrate_from_chat_id = isset($data['migrate_from_chat_id']) ? $data['migrate_from_chat_id'] : null;
+        if ($this->migrate_from_chat_id) {
+            $this->type = 'migrate_from_chat_id';
+        }
+
+        $this->pinned_message = isset($data['pinned_message']) ? $data['pinned_message'] : null;
+        if ($this->pinned_message) {
+            $this->pinned_message = new Message($this->pinned_message, $this->getBotName());
+        }
+
+        $this->entities = isset($data['entities']) ? $data['entities'] : null;
+        if (!empty($this->entities)) {
+            foreach ($this->entities as $entity) {
+                if (!empty($entity)) {
+                    $entities[] = new MessageEntity($entity);
+                }
+            }
+            $this->entities = $entities;
+        }
     }
 
     //return the entire command like /echo or /echo@bot1 if specified
@@ -302,9 +354,19 @@ class Message extends Entity
         return $this->forward_from;
     }
 
+    public function getForwardFromChat()
+    {
+        return $this->forward_from_chat;
+    }
+
     public function getForwardDate()
     {
         return $this->forward_date;
+    }
+
+    public function getEditDate()
+    {
+        return $this->edit_date;
     }
 
     public function getReplyToMessage()
@@ -370,14 +432,29 @@ class Message extends Entity
         return $this->location;
     }
 
+    public function getVenue()
+    {
+        return $this->venue;
+    }
+
     public function getNewChatParticipant()
     {
-        return $this->new_chat_participant;
+        return $this->new_chat_member;
     }
 
     public function getLeftChatParticipant()
     {
-        return $this->left_chat_participant;
+        return $this->left_chat_member;
+    }
+
+    public function getNewChatMember()
+    {
+        return $this->new_chat_member;
+    }
+
+    public function getLeftChatMember()
+    {
+        return $this->left_chat_member;
     }
 
     public function getNewChatTitle()
@@ -385,12 +462,10 @@ class Message extends Entity
         return $this->new_chat_title;
     }
 
-
     public function getNewChatPhoto()
     {
         return $this->new_chat_photo;
     }
-
 
     public function getDeleteChatPhoto()
     {
@@ -424,8 +499,8 @@ class Message extends Entity
 
     public function botAddedInChat()
     {
-        if (!empty($this->new_chat_participant)) {
-            if ($this->new_chat_participant->getUsername() == $this->getBotName()) {
+        if (!empty($this->new_chat_member)) {
+            if ($this->new_chat_member->getUsername() == $this->getBotName()) {
                 return true;
             }
         }
@@ -436,5 +511,15 @@ class Message extends Entity
     public function getType()
     {
         return $this->type;
+    }
+
+    public function getPinnedMessage()
+    {
+        return $this->pinned_message;
+    }
+
+    public function getEntities()
+    {
+        return $this->entities;
     }
 }

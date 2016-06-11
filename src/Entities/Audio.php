@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -21,10 +21,8 @@ class Audio extends Entity
     protected $mime_type;
     protected $file_size;
 
-
     public function __construct(array $data)
     {
-
         $this->file_id = isset($data['file_id']) ? $data['file_id'] : null;
         if (empty($this->file_id)) {
             throw new TelegramException('file_id is empty!');
@@ -40,7 +38,6 @@ class Audio extends Entity
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->mime_type = isset($data['mime_type']) ? $data['mime_type'] : null;
         $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
-
     }
 
     public function getFileId()
@@ -57,10 +54,12 @@ class Audio extends Entity
     {
         return $this->performer;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getMimeType()
     {
          return $this->mime_type;

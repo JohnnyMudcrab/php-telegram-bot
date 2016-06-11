@@ -1,13 +1,13 @@
 <?php
-
-/*
+/**
  * This file is part of the TelegramBot package.
  *
  * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-*/
+ */
+
 namespace Longman\TelegramBot\Entities;
 
 use Longman\TelegramBot\Exception\TelegramException;
@@ -18,8 +18,8 @@ class Sticker extends Entity
     protected $width;
     protected $height;
     protected $thumb;
+    protected $emoji;
     protected $file_size;
-
 
     public function __construct(array $data)
     {
@@ -45,8 +45,9 @@ class Sticker extends Entity
         }
         $this->thumb = new PhotoSize($this->thumb);
 
-        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
+        $this->emoji = isset($data['emoji']) ? $data['emoji'] : null;
 
+        $this->file_size = isset($data['file_size']) ? $data['file_size'] : null;
     }
 
     public function getFileId()
@@ -63,10 +64,17 @@ class Sticker extends Entity
     {
          return $this->height;
     }
+
     public function getThumb()
     {
          return $this->thumb;
     }
+
+    public function getEmoji()
+    {
+         return $this->emoji;
+    }
+
     public function getFileSize()
     {
          return $this->file_size;
