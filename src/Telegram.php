@@ -160,7 +160,7 @@ class Telegram
      *
      * @return Telegram
      */
-    public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8mb4')
+    public function enableMySql(array $credential, $table_prefix = null, $encoding = 'utf8')
     {
         $this->pdo = DB::initialize($credential, $this, $table_prefix, $encoding);
         ConversationDB::initializeConversation();

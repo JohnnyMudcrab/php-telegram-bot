@@ -64,14 +64,10 @@ class Request
         'getChatMembersCount',
         'answerCallbackQuery',
         'answerInlineQuery',
-<<<<<<< HEAD
-    );
-=======
         'editMessageText',
         'editMessageCaption',
         'editMessageReplyMarkup'
-    ];
->>>>>>> b1661047c183280846012566f20c5060f3920f32
+    );
 
     /**
      * Initialize

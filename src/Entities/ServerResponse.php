@@ -30,7 +30,7 @@ class ServerResponse extends Entity
                     }
                 } elseif ($data['ok'] & !$this->isAssoc($data['result']) & isset($data['result'][0]['user'])) {
                     //Response from getChatAdministrators
-                    $this->result = [];
+                    $this->result = array();
                     foreach ($data['result'] as $user) {
                         array_push($this->result, new ChatMember($user));
                     }

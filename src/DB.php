@@ -72,7 +72,8 @@ class DB
      * @return \PDO PDO database object
      * @throws TelegramException
      */
-    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null, $encoding = 'utf8mb4')
+//    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null, $encoding = 'utf8mb4')
+    public static function initialize(array $credentials, Telegram $telegram, $table_prefix = null, $encoding = 'utf8')
     {
         if (empty($credentials)) {
             throw new TelegramException('MySQL credentials not provided!');
