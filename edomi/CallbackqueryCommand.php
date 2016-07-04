@@ -31,16 +31,6 @@ class CallbackqueryCommand extends SystemCommand
      */
     public function execute()
     {
-        CallBackQueryExecute($this); return;
-        $update = $this->getUpdate();
-        $callback_query = $update->getCallbackQuery();
-        $callback_query_id = $callback_query->getId();
-        $callback_data = $callback_query->getData();
-
-        $data['callback_query_id'] = $callback_query_id;
-        $data['text'] = "*** '$callback_data' received by EDOMI ***";
-        $data['show_alert'] = false;
- 
-        return Request::answerCallbackQuery($data);
+        CallBackQueryExecute($this);
     }
 }
